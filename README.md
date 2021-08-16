@@ -1,3 +1,20 @@
+# Kiyoon note
+
+## Something-Something-V2
+Run docker with `-v /path/to/Video-Swin-Transformer:/root`.  
+`conda init bash` and `. ~/.bashrc` (conda base environment).  
+`pip install einops`  
+`pip install decord`  
+Install pillow-simd (don't follow Install.md, but follow official github).  
+Locate dataset files in `data/sthv2/videos` and `data/sthv2/annotations`.  
+Use `tools/data/sthv2/generate_videos_filelist.sh`.  
+Download pretrained Kinetics-400 in `data`.  
+`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv2.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
+It will update every 8 iterations (see optimizer_config.update_interval).  
+Batch size is `cfg.data.videos_per_gpu // cfg.optimizer_config.update_interval`.  
+`model.backbone.use_checkpoint=True` will save GPU memory.
+
+
 # Video Swin Transformer
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/video-swin-transformer/action-classification-on-kinetics-400)](https://paperswithcode.com/sota/action-classification-on-kinetics-400?p=video-swin-transformer)
