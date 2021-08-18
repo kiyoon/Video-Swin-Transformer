@@ -12,7 +12,34 @@ Download pretrained Kinetics-400 in `data`.
 `bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv2.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
 It will update every 8 iterations (see optimizer_config.update_interval).  
 Batch size is `cfg.data.videos_per_gpu // cfg.optimizer_config.update_interval`.  
-`model.backbone.use_checkpoint=True` will save GPU memory.
+`model.backbone.use_checkpoint=True` will save GPU memory.  
+`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv2.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
+
+## Conda install
+```bash
+conda create -n mmaction python=3.8
+conda activate mmaction
+conda install pytorch=1.9.0 torchvision=0.10.0 cudatoolkit=11.1 -c pytorch -c nvidia
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html
+pip install decord einops timm scipy imgaug
+
+# apex
+git clone https://github.com/NVIDIA/apex
+cd apex
+# if you don't have NVCC (from CUDA) available on the system, use this (slightly slow training?)
+pip install -v --disable-pip-version-check --no-cache-dir ./
+# if you have NVCC, then
+# pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
+cd ..
+
+# Video-Swin-Transformer
+pip install -v -e .
+
+# need to do it at the end
+pip uninstall -y pillow
+CC="cc -mavx2" pip install -U --force-reinstall pillow-simd
+```
+
 
 
 # Video Swin Transformer
