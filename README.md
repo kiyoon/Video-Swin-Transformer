@@ -1,6 +1,15 @@
 # Kiyoon note
 
 ## Something-Something-V1
+```bash
+cd data
+mkdir sthv1
+cd sthv1
+ln -s /path/to/something-something-v1/frames rawframes
+ln -s /path/to/something-something-v1/annotations
+cd ../../tools/data/sthv1
+bash generate_rawframes_filelist.sh
+```
 `bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv1.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
 
 ## Something-Something-V2
