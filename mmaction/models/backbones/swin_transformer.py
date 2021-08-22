@@ -13,6 +13,7 @@ from functools import reduce, lru_cache
 from operator import mul
 from einops import rearrange
 
+from .tc_reordering import NCTHW_to_TC_NCTHW
 
 class Mlp(nn.Module):
     """ Multilayer perceptron."""
@@ -667,3 +668,9 @@ class SwinTransformer3D(nn.Module):
         super(SwinTransformer3D, self).train(mode)
         self._freeze_stages()
 
+@BACKBONES.register_module()
+class SwinTransformer3DTC(SwinTransformer3D):
+    def forward(self, x):
+        x = NCTHW_to_TC_NCTHW(x)
+
+        return super().forward(x)

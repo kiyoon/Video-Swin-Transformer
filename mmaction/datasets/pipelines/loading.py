@@ -1127,9 +1127,10 @@ class RawFrameDecode:
         kwargs (dict, optional): Arguments for FileClient.
     """
 
-    def __init__(self, io_backend='disk', decoding_backend='cv2', **kwargs):
+    def __init__(self, io_backend='disk', decoding_backend='cv2', grayscale=False, **kwargs):
         self.io_backend = io_backend
         self.decoding_backend = decoding_backend
+        self.grayscale = grayscale
         self.kwargs = kwargs
         self.file_client = None
 
@@ -1161,8 +1162,11 @@ class RawFrameDecode:
             if modality == 'RGB':
                 filepath = osp.join(directory, filename_tmpl.format(frame_idx))
                 img_bytes = self.file_client.get(filepath)
-                # Get frame with channel order RGB directly.
-                cur_frame = mmcv.imfrombytes(img_bytes, channel_order='rgb')
+                if not self.grayscale:
+                    # Get frame with channel order RGB directly.
+                    cur_frame = mmcv.imfrombytes(img_bytes, channel_order='rgb')
+                else:
+                    cur_frame = np.expand_dims(mmcv.imfrombytes(img_bytes, flag='grayscale'), axis=-1)
                 imgs.append(cur_frame)
             elif modality == 'Flow':
                 x_filepath = osp.join(directory,
