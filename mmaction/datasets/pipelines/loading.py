@@ -232,8 +232,8 @@ class SampleFrames:
         """
         total_frames = results['total_frames']
         if self.frame_uniform:  # sthv2 sampling strategy
-            assert results['start_index'] == 0
-            frame_inds = self.get_seq_frames(total_frames)
+            #assert results['start_index'] == 0
+            frame_inds = self.get_seq_frames(total_frames) + results['start_index']
         else:
             clip_offsets = self._sample_clips(total_frames)
             frame_inds = clip_offsets[:, None] + np.arange(

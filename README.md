@@ -1,5 +1,8 @@
 # Kiyoon note
 
+## Something-Something-V1
+`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv1.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
+
 ## Something-Something-V2
 Run docker with `-v /path/to/Video-Swin-Transformer:/root`.  
 `conda init bash` and `. ~/.bashrc` (conda base environment).  
@@ -13,7 +16,6 @@ Download pretrained Kinetics-400 in `data`.
 It will update every 8 iterations (see optimizer_config.update_interval).  
 Batch size is `cfg.data.videos_per_gpu // cfg.optimizer_config.update_interval`.  
 `model.backbone.use_checkpoint=True` will save GPU memory.  
-`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv2.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
 
 ## Conda install
 ```bash
