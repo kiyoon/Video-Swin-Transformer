@@ -27,6 +27,7 @@ def to_tensor(data):
     raise TypeError(f'type {type(data)} cannot be converted to tensor.')
 
 
+from pyvideoai.utils.tc_reordering import NCTHW_to_TC_NCTHW
 @PIPELINES.register_module()
 class ToTensor:
     """Convert some values in results dict to `torch.Tensor` type in data
@@ -36,9 +37,13 @@ class ToTensor:
         keys (Sequence[str]): Required keys to be converted.
     """
 
-    def __init__(self, keys, GreyST=False):
+    def __init__(self, keys, GreyST=False, TC=False):
         self.keys = keys
         self.GreyST = GreyST
+        self.TC = TC
+
+        if GreyST:
+            assert not TC, 'TC and GreyST cannot be set to True together.'
 
     def __call__(self, results):
         """Performs the ToTensor formating.
@@ -49,11 +54,16 @@ class ToTensor:
         """
         for key in self.keys:
             results[key] = to_tensor(results[key])
-            if self.GreyST and key == 'imgs':
-                inputs = results[key]
-                inputs = torch.mean(inputs, 1, keepdim=True)    # channel average (grayscale)
-                N, C, T, H, W = inputs.shape
-                results[key] = inputs.view(N,3,T//3,H,W).reshape(N, T//3, 3, H, W).permute(0,2,1,3,4)
+            if key == 'imgs':
+                if self.GreyST:
+                    inputs = results[key]
+                    inputs = torch.mean(inputs, 1, keepdim=True)    # channel average (grayscale)
+                    N, C, T, H, W = inputs.shape
+                    results[key] = inputs.view(N,3,T//3,H,W).reshape(N, T//3, 3, H, W).permute(0,2,1,3,4)
+                elif self.TC:
+                    inputs = results[key]
+                    #N, C, T, H, W = inputs.shape
+                    results[key] = NCTHW_to_TC_NCTHW(inputs)
         return results
 
     def __repr__(self):

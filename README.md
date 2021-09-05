@@ -1,5 +1,7 @@
 # Kiyoon note
 
+Change: `mmaction/datasets/pipelines/formatting.py`, `ToTensor` class has GreyST and TC parameters.
+
 ## Something-Something-V1
 ```bash
 cd data
