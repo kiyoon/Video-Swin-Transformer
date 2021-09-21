@@ -12,7 +12,8 @@ ln -s /path/to/something-something-v1/annotations
 cd ../../tools/data/sthv1
 bash generate_rawframes_filelist.sh
 ```
-`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv1.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
+`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv1.py 8 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
+`bash tools/dist_test.sh configs/recognition/swin/swin_base_patch244_window1677_sthv1.py work_dirs/sthv1_swin_base_patch244_window1677.py/epoch_$epoch.pth 8 --eval top_k_accuracy --out work_dirs/sthv1_swin_base_patch244_window1677.py/eval_$epoch.json`
 
 ## Something-Something-V2
 Run docker with `-v /path/to/Video-Swin-Transformer:/root`.  
@@ -23,7 +24,7 @@ Install pillow-simd (don't follow Install.md, but follow official github).
 Locate dataset files in `data/sthv2/videos` and `data/sthv2/annotations`.  
 Use `tools/data/sthv2/generate_videos_filelist.sh`.  
 Download pretrained Kinetics-400 in `data`.  
-`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv2.py 2 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
+`bash tools/dist_train.sh configs/recognition/swin/swin_base_patch244_window1677_sthv2.py 8 --cfg-options load_from=data/swin_base_patch244_window877_kinetics400_22k.pth model.backbone.use_checkpoint=True`  
 It will update every 8 iterations (see optimizer_config.update_interval).  
 Batch size is `cfg.data.videos_per_gpu // cfg.optimizer_config.update_interval`.  
 `model.backbone.use_checkpoint=True` will save GPU memory.  
